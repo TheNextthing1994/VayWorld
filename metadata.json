@@ -1,0 +1,6 @@
+{
+  "name": "VayWorld",
+  "description": "Ein immersiver Digitaler Workspace namens VayWorld. Verwalte Projekte, finde Arbitrage-Ideen in der Außenwelt und triff Deine Agenten in personalisierten Büros.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
