@@ -6,6 +6,8 @@ import {
 import { GameSave, PlayerStats, Task, Project, Officer, Room, WORLD, COLORS, IdeaPillar, LootCore, Skill, DecorativeLandscapeElement } from './types';
 import { chatWithOfficer, refineIdea, judgeIdea, IdeaScore } from './services/geminiService';
 import BueroSzene from './components/BueroSzene';
+import HybridOverview from './components/HybridOverview';
+import type { DepartmentId } from './services/councilService';
 import UplinkOverview from './components/UplinkOverview';
 import { DesktopDashboard, BoardMode } from './components/DesktopDashboard';
 
@@ -314,6 +316,9 @@ export default function App() {
   const [player, setPlayer] = useState<PlayerStats>({ x: 400, y: 400, r: 15, hp: 100, maxHp: 100, spd: 350 });
   
   const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+  // Additive mode: the existing playable world remains mounted and keeps its state.
+  const [showHybridOverview, setShowHybridOverview] = useState(false);
+  const hybridActiveRef = useRef(false);
   const [lastLoot, setLastLoot] = useState<LootCore | null>(null);
   
   const projectCapacity = useMemo(() => {
@@ -670,6 +675,10 @@ export default function App() {
   const [messages, setMessages] = useState<any[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const keysRef = useRef<Record<string, boolean>>({});
+  useEffect(() => {
+    hybridActiveRef.current = showHybridOverview;
+    keysRef.current = {}; // Do not carry WASD/E input across surfaces.
+  }, [showHybridOverview]);
   const lastTimeRef = useRef<number | null>(null);
   const frameRef = useRef(0);
 
@@ -693,7 +702,7 @@ export default function App() {
   useEffect(() => localStorage.setItem(SAVE_KEY, JSON.stringify(save)), [save]);
 
   const update = useCallback((dt: number) => {
-    if (showIntro) return;
+    if (showIntro || hybridActiveRef.current) return;
     if (activeOfficer) return;
     if (activeRoomId) return;
     let mx = 0, my = 0;
@@ -2856,6 +2865,7 @@ export default function App() {
     frameRef.current = requestAnimationFrame(loop);
 
     const kd = (e: KeyboardEvent) => {
+      if (hybridActiveRef.current) return; // Council and overview own their interactions.
       const key = e.key.toLowerCase();
       keysRef.current[key] = true;
       if (key === 'escape') {
@@ -3474,6 +3484,13 @@ export default function App() {
         )}
 
         <div className="flex gap-4 pointer-events-none">
+          <button
+            onClick={() => { playSynthSound('click'); keysRef.current = {}; setShowHybridOverview(true); }}
+            className="pointer-events-auto flex items-center gap-2 rounded-2xl border border-sky-400/40 bg-slate-900/90 px-4 py-3 text-xs font-black tracking-wider text-sky-200 shadow-2xl backdrop-blur-md transition-colors hover:bg-sky-800/60"
+            title="Neue Hybrid-Übersicht öffnen; die bisherige VayWorld bleibt erhalten"
+          >
+            <LayoutDashboard size={19} /> HYBRID
+          </button>
           {/* Immersive HUD toggle button (Dashboard toggle) placed perfectly between panels */}
           <button 
             onClick={() => {
@@ -4413,6 +4430,29 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showHybridOverview && (
+        <HybridOverview
+          save={save}
+          onExplore={() => { setShowHybridOverview(false); keysRef.current = {}; }}
+          onOpenDashboard={(tab) => {
+            setShowHybridOverview(false);
+            setDashboardTab(tab);
+            setShowUplinkOverview(true);
+          }}
+          onOpenRoom={(id: DepartmentId) => {
+            setShowHybridOverview(false);
+            keysRef.current = {};
+            if (id === 'ops') {
+              // Existing OPS route opens the Digital Office dashboard, not a 3D room.
+              setDashboardTab('AGENTEN');
+              setShowUplinkOverview(true);
+            } else {
+              setActiveRoomId(id);
+            }
+          }}
+        />
+      )}
 
       {activeRoomId && (
         <BueroSzene 
