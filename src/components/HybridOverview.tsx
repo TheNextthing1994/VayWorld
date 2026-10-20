@@ -64,6 +64,14 @@ export default function HybridOverview({ save, onExplore, onOpenRoom, onOpenDash
               <div className="text-xs font-bold uppercase tracking-[.17em] text-sky-200">Abteilungen</div>
               <p className="mt-1 text-[11px] text-slate-400">Insel wählen oder die Energiekugel für deinen Wiedereinstiegsrat anklicken.</p>
             </div>
+            <div className="absolute right-4 top-4 z-10 flex flex-col gap-2 rounded-2xl border border-sky-300/25 bg-[#071423]/85 p-3 shadow-2xl backdrop-blur-xl xl:hidden">
+              <span className="text-[10px] uppercase tracking-[.13em] text-slate-400">Aktueller Bereich</span>
+              <span className="text-sm font-bold" style={{ color: brief.accent }}>{brief.title}</span>
+              <button onClick={() => onOpenRoom(selected)}
+                className="rounded-lg bg-sky-600 px-3 py-2 text-xs font-semibold text-white hover:bg-sky-500">
+                Bereich öffnen →
+              </button>
+            </div>
             <div className="pointer-events-none absolute bottom-[76px] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-orange-300/25 bg-slate-950/55 px-4 py-2 text-center text-[10px] text-amber-100 shadow-xl backdrop-blur-xl">
               <Sparkles className="mr-2 inline" size={15} /> ENERGIEKUGEL · RAT EINBERUFEN
             </div>
