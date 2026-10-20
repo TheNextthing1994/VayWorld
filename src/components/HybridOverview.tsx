@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, OrbitControls, ContactShadows } from '@react-three/drei';
+import { OrbitControls, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { AnimatePresence, motion } from 'motion/react';
 import { Brain, Compass, Home, LayoutDashboard, ListTodo, Network, RotateCcw, Sparkles, X } from 'lucide-react';
@@ -133,20 +133,20 @@ function CouncilCore({ council, onOpen }: { council: boolean; onOpen: () => void
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, .04, 0]}>
         <ringGeometry args={[.67, .77, 60]} />
-        <meshBasicMaterial color="#4ab4ed" transparent opacity={.8} side={THREE.DoubleSide} />
+        <meshBasicMaterial color="#ffbc7c" transparent opacity={.8} side={THREE.DoubleSide} />
       </mesh>
       <group ref={core} position={[0, 1.05, 0]} onClick={(event) => { event.stopPropagation(); onOpen(); }}>
         <mesh>
           <sphereGeometry args={[.46, 32, 24]} />
-          <meshStandardMaterial color="#78c9ff" emissive="#3488f5" emissiveIntensity={council ? 3 : 1.7} metalness={.28} roughness={.16} />
+          <meshStandardMaterial color="#ffd3a1" emissive="#ff7a30" emissiveIntensity={council ? 3.4 : 2.1} metalness={.28} roughness={.16} />
         </mesh>
         <mesh>
           <sphereGeometry args={[.68, 24, 20]} />
-          <meshBasicMaterial color="#5cbaff" transparent opacity={.11} depthWrite={false} />
+          <meshBasicMaterial color="#ff9d55" transparent opacity={.15} depthWrite={false} />
         </mesh>
         <mesh rotation={[.9, 0, .45]}>
           <torusGeometry args={[.71, .022, 8, 72]} />
-          <meshBasicMaterial color="#d1f3ff" />
+          <meshBasicMaterial color="#fff0cb" />
         </mesh>
         <mesh rotation={[-.34, .6, .8]}>
           <torusGeometry args={[.74, .015, 8, 72]} />
@@ -178,7 +178,7 @@ function WorldStage({
       <color attach="background" args={['#091521']} />
       <ambientLight intensity={1.2} />
       <directionalLight position={[2, 10, 8]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} />
-      <pointLight position={[0, 3.2, 0]} intensity={22} distance={7} color="#57aeff" />
+      <pointLight position={[0, 3.2, 0]} intensity={22} distance={7} color="#ff9a56" />
       <pointLight position={[-6, 5, 1]} intensity={15} distance={10} color="#fdc086" />
       <group>
         {DEPARTMENTS.map(dept => (
@@ -304,7 +304,7 @@ export default function HybridOverview({ save, onExplore, onOpenRoom, onOpenDash
 
       <AnimatePresence>
         {council && (
-          <motion.div className="absolute inset-0 z-30 flex items-center justify-center bg-[#06101c]/78 p-4 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div className={councilReady ? 'absolute inset-0 z-30 flex items-center justify-center bg-[#06101c]/78 p-4 backdrop-blur-[3px]' : 'absolute inset-0 z-30 flex items-center justify-center bg-[#06101c]/25 p-4'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.section initial={{ scale: .92, y: 24 }} animate={{ scale: 1, y: 0 }} exit={{ scale: .95, opacity: 0 }} className="w-full max-w-xl rounded-[28px] border border-sky-300/30 bg-[#10243a]/95 p-5 shadow-[0_0_100px_rgba(53,145,244,.23)] sm:p-8" role="dialog" aria-modal="true" aria-labelledby="council-title">
               <div className="flex justify-between gap-3">
                 <div>
