@@ -313,14 +313,6 @@ function EnergyOrb({ council, onCouncil }:{council:boolean;onCouncil:()=>void}) 
   });
   return (
     <group>
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,.0,0]}>
-        <ringGeometry args={[.58,.64,80]}/>
-        <meshBasicMaterial color="#ffa84f" side={THREE.DoubleSide} toneMapped={false}/>
-      </mesh>
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-.03,0]}>
-        <ringGeometry args={[.71,.90,80]}/>
-        <meshBasicMaterial color="#ff853e" transparent opacity={.15} side={THREE.DoubleSide} depthWrite={false}/>
-      </mesh>
       <group ref={group} position={[0,1.1,0]} onClick={e=>{e.stopPropagation();onCouncil();}}>
         <mesh>
           <sphereGeometry args={[.40,40,32]}/>
@@ -336,12 +328,6 @@ function EnergyOrb({ council, onCouncil }:{council:boolean;onCouncil:()=>void}) 
           </bufferGeometry>
           <pointsMaterial color="#ffcd83" size={.065} sizeAttenuation transparent opacity={.95} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false}/>
         </points>
-        {[[-.40,0,.4],[.7,.8,0],[-.9,.2,-.3]].map((r,i)=>(
-          <mesh key={i} rotation={r as [number,number,number]}>
-            <torusGeometry args={[.76+i*.08,.019,8,100]}/>
-            <meshBasicMaterial color={i===1?'#ff8a39':'#ffe0a5'} transparent opacity={.85} depthWrite={false} toneMapped={false}/>
-          </mesh>
-        ))}
         <mesh>
           <sphereGeometry args={[.96,24,16]}/>
           <meshBasicMaterial color="#ff9d3d" transparent opacity={.06} depthWrite={false} side={THREE.BackSide} blending={THREE.AdditiveBlending}/>
